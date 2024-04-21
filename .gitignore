@@ -1,0 +1,20 @@
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Visual Studio Code
+.vscode/
+.history/
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+# local test
+test/
+*.ipynb
+.ipynb_checkpoints/
