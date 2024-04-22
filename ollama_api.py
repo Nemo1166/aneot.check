@@ -7,6 +7,7 @@ class OllamaAPI:
                         'role': 'system',
                         'content': sysprompt,
                     }
+
     def get_response(self, content, stream=False):
         response =  ollama.chat(
                         model=self.model, 
