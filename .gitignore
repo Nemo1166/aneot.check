@@ -18,3 +18,4 @@ build/
 test/
 *.ipynb
 .ipynb_checkpoints/
+*.log

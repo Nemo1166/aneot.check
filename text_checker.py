@@ -1,14 +1,15 @@
 import re
+from logger import Logger
 from punc_checker import check_chinese_quotes, check_continuous_dots
 from utils import md_parser
 
 
-def text_check(path, i, line):
+def text_check(path, i, line, logger: Logger):
     # 检测行首/行尾的空格
     if line[0] in [' ', '\t']:
-        print(f"{path}: 第 {i+1} 行行首有空格，这是否应该有空格？")
+        logger.verbose(path, f"第 {i+1} 行行首有空格，这是否应该有空格？")
     if line[-1] in [' ', '\t']:
-        print(f"{path}: 第 {i+1} 行行尾有空格，这是否应该有空格？")
+        logger.verbose(path, f"第 {i+1} 行行尾有空格,这是否应该有空格?")
     # 跳过空行、标题行和分割线
     text = md_parser(line)
     if (len(text) == 0) or (text[0] == '#') or (text[:3] in ['---', '___', '***']):
@@ -19,7 +20,7 @@ def text_check(path, i, line):
     find = re.findall(pattern, text)
     if len(find) > 0:
         for item in find:
-            print(f"{path}: 第 {i+1} 行可能有夹杂在中文中的英文标点 「{item}」.")
+            logger.verbose(path, f"第 {i+1} 行可能有夹杂在中文中的英文标点 「{item}」.")
     
     # 检测引号闭合问题
     if not check_chinese_quotes(text):
@@ -29,7 +30,7 @@ def text_check(path, i, line):
     dots = check_continuous_dots(text)
     if len(dots) > 0:
         for item in dots:
-            print(f"{path}: 第 {i+1} 行出现「{item}」，这是否应该是省略号？")
+            logger.verbose(path, f"第 {i+1} 行出现「{item}」，这是否应该是省略号？")
 
     # pangu
     pattern = re.compile(r'([\u4e00-\u9fff]+[a-zA-Z0-9]+)|([a-zA-Z0-9]+[\u4e00-\u9fff]+)')
@@ -37,10 +38,10 @@ def text_check(path, i, line):
     for item in pangu:
         for subitem in item:
             if len(subitem) > 0:
-                print(f"{path}: 第 {i+1} 行出现「{subitem}」，这其中是否缺少了空格？")
+                logger.verbose(path, f"第 {i+1} 行出现「{subitem}」，这其中是否缺少了空格？")
 
     pattern = r'[^\x00-\xff]{1,3}\s[^\x00-\xff]{1,3}'
     result = re.findall(pattern, text)
     if len(result) > 0:
         for item in result:
-            print(f"{path}: 第 {i+1} 行出现「{item}」，这其中是否有多余的空格？")
+            logger.verbose(path, f"第 {i+1} 行出现「{item}」，这其中是否有多余的空格？")

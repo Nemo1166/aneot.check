@@ -16,3 +16,8 @@ def md_parser(text):
 
     return tmp
 
+def md_extract_image_link(text):
+    # 正则表达式匹配Markdown图片链接
+    img_pattern = r"!\[.*?\]\((.*?)\)"
+    img_links = re.findall(img_pattern, text)
+    return img_links
